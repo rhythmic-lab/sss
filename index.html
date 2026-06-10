@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alohomora... | The Secret Society</title>
+    <link href="https://fonts.googleapis.com/css?family=Lobster&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand-obsidian: #06060b;
+            --brand-mystic-purple: #7b2cbf;
+            --brand-cyber-cyan: #00f5ff;
+            --brand-void-pink: #ff00c8;
+            --magic-gold: #f5af19;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--brand-obsidian);
+            font-family: 'Verdana', sans-serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #e0e0e0;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        /* --- MAGIC LAYER: CELESTIAL STARFIELD --- */
+        .stars {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: 
+                radial-gradient(circle at center, rgba(123, 44, 191, 0.25) 0%, transparent 70%),
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px);
+            background-size: 100% 100%, 550px 550px, 350px 350px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.8;
+            transition: opacity 0.2s ease;
+        }
+
+        /* --- MAGIC LAYER: HARDWARE ACCELERATED GLOWING FIREFLIES --- */
+        .firefly-container {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 2;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .firefly {
+            position: absolute;
+            background: radial-gradient(circle, #fff 10%, rgba(0, 245, 255, 0.8) 40%, transparent 100%);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        /* Set up unique drifting tracking frames for the glowing entities */
+        .firefly:nth-child(1) { width: 12px; height: 12px; top: 80%; left: 15%; animation: driftUp 7s ease-in-out infinite, fireflyPulse 2.5s infinite alternate; }
+        .firefly:nth-child(2) { width: 8px; height: 8px; top: 65%; left: 75%; animation: driftUp 9s ease-in-out infinite 1s, fireflyPulse 3s infinite alternate; background: radial-gradient(circle, #fff 10%, rgba(255, 0, 200, 0.8) 40%, transparent 100%); }
+        .firefly:nth-child(3) { width: 15px; height: 15px; top: 90%; left: 45%; animation: driftUp 6s ease-in-out infinite 2s, fireflyPulse 2s infinite alternate; }
+        .firefly:nth-child(4) { width: 10px; height: 10px; top: 40%; left: 85%; animation: driftUp 8s ease-in-out infinite 0.5s, fireflyPulse 2.2s infinite alternate; }
+        .firefly:nth-child(5) { width: 14px; height: 14px; top: 75%; left: 30%; animation: driftUp 10s ease-in-out infinite 3s, fireflyPulse 3.5s infinite alternate; background: radial-gradient(circle, #fff 10%, rgba(123, 44, 191, 0.8) 40%, transparent 100%); }
+        .firefly:nth-child(6) { width: 9px; height: 9px; top: 50%; left: 10%; animation: driftUp 7.5s ease-in-out infinite 1.5s, fireflyPulse 2.8s infinite alternate; }
+
+        /* Cinematic Camera Flash Shield Overlay */
+        .apple-flash {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #fff;
+            opacity: 0;
+            z-index: 20;
+            pointer-events: none;
+            transition: opacity 0.1s ease-in-out;
+        }
+        .apple-flash.active {
+            opacity: 1;
+        }
+
+        .tunnel-container {
+            position: relative;
+            text-align: center;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            box-sizing: border-box;
+            transform-style: preserve-3d;
+        }
+
+        /* --- THE HEADING STRUCTURE --- */
+        h1 {
+            font-family: 'Lobster', 'Georgia', serif;
+            font-size: 3.5rem;
+            margin: 0 0 40px 0;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #ffffff 0%, #a2e8dd 50%, #00f5ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0px 4px 10px rgba(0, 245, 255, 0.4));
+            animation: floatingGlow 3s ease-in-out infinite alternate;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease-out;
+            will-change: transform, opacity;
+        }
+
+        /* The Magical Portal Vortex */
+        .portal-vortex {
+            position: relative;
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform;
+            z-index: 5;
+            transform: translateZ(0);
+        }
+
+        .layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 5px solid transparent;
+            mix-blend-mode: screen;
+            will-change: transform;
+        }
+
+        .layer-1 {
+            border-top-color: var(--brand-cyber-cyan);
+            border-bottom-color: var(--brand-cyber-cyan);
+            animation: spin 2.2s linear infinite;
+            filter: drop-shadow(0 0 12px var(--brand-cyber-cyan));
+        }
+
+        .layer-2 {
+            width: 86%;
+            height: 86%;
+            border-left-color: var(--brand-void-pink);
+            border-right-color: var(--brand-void-pink);
+            animation: spin-reverse 1.7s linear infinite;
+            filter: drop-shadow(0 0 16px var(--brand-void-pink));
+        }
+
+        .layer-3 {
+            width: 70%;
+            height: 70%;
+            border-top-color: var(--brand-mystic-purple);
+            animation: spin 1.1s linear infinite;
+        }
+
+        /* Core Singularity centerpiece */
+        .portal-core {
+            width: 52%;
+            height: 52%;
+            background-color: #000;
+            border-radius: 50%;
+            z-index: 3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 0 0 20px var(--brand-mystic-purple);
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        /* --- WIZARDING INCANTATION READOUT --- */
+        .incantation-countdown {
+            font-family: 'Lobster', 'Georgia', serif;
+            font-size: 3.8rem;
+            font-weight: bold;
+            z-index: 10;
+            position: absolute;
+            background: linear-gradient(135deg, #ffe066 0%, #f5af19 40%, #e65c00 70%, #ffdd67 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.9)) drop-shadow(0 0 10px rgba(245, 175, 25, 0.5));
+            letter-spacing: -2px;
+            user-select: none;
+            transition: transform 0.1s ease, opacity 0.15s ease;
+        }
+
+        /* Responsive Mobile Scaling Parameters */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2.3rem;
+                margin-bottom: 30px;
+            }
+            .portal-vortex {
+                width: 190px;
+                height: 190px;
+            }
+            .incantation-countdown {
+                font-size: 2.8rem;
+            }
+        }
+
+        /* --- MAGIC MOTION TIMELINES (Strictly GPU-Bound) --- */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes spin-reverse {
+            0% { transform: rotate(360deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        @keyframes floatingGlow {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-6px); }
+        }
+
+        @keyframes driftUp {
+            0% { transform: translateY(100px) translateX(0px); }
+            50% { transform: translateY(-100px) translateX(25px); }
+            100% { transform: translateY(-300px) translateX(-10px); }
+        }
+
+        @keyframes fireflyPulse {
+            0%, 100% { opacity: 0; filter: blur(1px); }
+            50% { opacity: 0.85; filter: blur(0px); }
+        }
+
+        /* --- CINEMATIC REVEAL SWITCH PERFORMANCE ALIGNMENTS --- */
+        .warp h1 {
+            transform: scale(0.8);
+            opacity: 0;
+        }
+
+        .warp .portal-vortex {
+            transform: scale(14) translateZ(0);
+        }
+
+        .warp .layer {
+            filter: none !important; /* Immediately drop heavy visual filters for speed */
+        }
+
+        .warp .portal-core {
+            background-color: var(--brand-obsidian);
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="apple-flash" id="flash-overlay"></div>
+    
+    <div class="stars" id="ambient-stars"></div>
+    
+    <div class="firefly-container" id="ambient-fireflies">
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+    </div>
+
+    <div class="tunnel-container" id="tunnel-hub">
+        
+        <h1 id="main-heading">The Secret Society</h1>
+        
+        <div class="portal-vortex" id="vortex-core">
+            <div class="layer layer-1"></div>
+            <div class="layer layer-2"></div>
+            <div class="layer layer-3"></div>
+            <div class="portal-core"></div>
+            
+            <div class="incantation-countdown" id="timer">3</div>
+        </div>
+
+    </div>
+
+    <script>
+        const targetDestination = "https://studentsecretsociety.qzz.io"; 
+
+        let secondsLeft = 3;
+        const countdownElement = document.getElementById('timer');
+        const containerElement = document.getElementById('tunnel-hub');
+        const flashOverlay = document.getElementById('flash-overlay');
+        const starsLayer = document.getElementById('ambient-stars');
+        const fireflyLayer = document.getElementById('ambient-fireflies');
+
+        const countdownInterval = setInterval(() => {
+            secondsLeft--;
+            if (secondsLeft >= 0) {
+                countdownElement.innerText = secondsLeft;
+            }
+            
+            countdownElement.style.transform = "scale(1.15)";
+            setTimeout(() => { countdownElement.style.transform = "scale(1)"; }, 80);
+
+            if (secondsLeft <= 0) {
+                clearInterval(countdownInterval);
+                
+                // 1. Instantly trigger crisp, blinding key flash frame overlay
+                flashOverlay.classList.add('active');
+                countdownElement.style.opacity = "0";
+                
+                // 2. Shut off environmental background loads during animation frames
+                setTimeout(() => {
+                    flashOverlay.classList.remove('active');
+                    starsLayer.style.opacity = "0"; 
+                    fireflyLayer.style.opacity = "0";
+                    containerElement.classList.add('warp');
+                }, 100);
+                
+                // 3. Perfect hand-off transition timing for window mapping pipelines
+                setTimeout(() => {
+                    window.location.href = targetDestination;
+                }, 700);
+            }
+        }, 1000);
+
+        // Fail-safe to avoid browser navigation freezing trap setups 
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
+    </script>
+</body>
+</html>
